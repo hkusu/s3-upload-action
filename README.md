@@ -17,7 +17,7 @@ This is a GitHub Action to upload files to Amazon S3.
     source-path: ./sample.txt
     destination-path: my-dir/sample.txt
     download-base-url: http://my-bucket.s3-website-ap-northeast-1.amazonaws.com # option
-    download-qr-image-path: my-dir/qr.png # option
+    download-qr-image-path: my-dir/qr.png # option. If specified, it will be created automatically
 - name: Show download URL
   run: |
     echo '${{ steps.upload.outputs.download-url }}' # if 'download-base-url' is specified

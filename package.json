@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "aws-sdk": "^2.820.0"
+    "aws-sdk": "^2.820.0",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5"

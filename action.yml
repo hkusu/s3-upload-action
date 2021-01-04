@@ -8,17 +8,17 @@ inputs:
   s3-bucket:
     description: ''
     required: true
+  source-path:
+    description: ''
+    required: true
+  destination-path:
+    description: ''
+    required: true
   download-base-url:
     description: ''
-    required: true
-  download-dir:
-    description: ''
     required: false
-  path:
+  download-qr-image-path:
     description: ''
-    required: true
-  upload-qr-code-image:
-    description: 'false'
     required: false
 outputs:
   download-url:

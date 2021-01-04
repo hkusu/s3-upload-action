@@ -12,11 +12,11 @@ This is a GitHub Action to upload files to Amazon S3.
     aws-region: ap-northeast-1
 - uses: hkusu/s3-upload-action@v0.1.0
   with:
-    s3-bucket: 'my-bucket'
-    download-base-url: 'http://my-bucket.s3-website-ap-northeast-1.amazonaws.com'
-    download-dir: 'abcdefg'
-    path: sample.txt
-    upload-qr-code-image: true
+    s3-bucket: my-bucket
+    source-path: ./sample.txt
+    destination-path: abcde/sample.txt
+    download-base-url: http://my-bucket.s3-website-ap-northeast-1.amazonaws.com
+    download-qr-image-path: abcde/qr.png
 ```
 
 ## License

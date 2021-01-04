@@ -1,0 +1,32 @@
+name: 'S3 Upload Action'
+description: 'This is a GitHub Action to upload files to Amazon S3.'
+author: 'Hiroyuki Kusu'
+branding:
+  icon: 'bell'
+  color: 'white'
+inputs:
+  s3-bucket:
+    description: ''
+    required: true
+  download-base-url:
+    description: ''
+    required: true
+  download-dir:
+    description: ''
+    required: false
+  path:
+    description: ''
+    required: true
+  upload-qr-code-image:
+    description: 'false'
+    required: false
+outputs:
+  download-url:
+    description: ''
+  download-qr-url:
+    description: ''
+  result:
+    description: '`success` or `failure` is set.'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

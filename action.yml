@@ -1,9 +1,6 @@
 name: 'S3 Upload Action'
 description: 'This is a GitHub Action to upload files to Amazon S3.'
 author: 'Hiroyuki Kusu'
-branding:
-  icon: 'bell'
-  color: 'white'
 inputs:
   s3-bucket:
     description: ''

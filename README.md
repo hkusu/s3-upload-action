@@ -10,7 +10,7 @@ This is a GitHub Action to upload files to Amazon S3.
     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     aws-region: ap-northeast-1
-- uses: hkusu/s3-upload-action@v0.1.0
+- uses: hkusu/s3-upload-action@v1
   id: upload
   with:
     s3-bucket: my-bucket
@@ -29,7 +29,7 @@ This is a GitHub Action to upload files to Amazon S3.
 Use `result` outputs.
 
 ```yaml
-- uses: hkusu/s3-upload-action@v0.1.0
+- uses: hkusu/s3-upload-action@v1
   id: upload
   with:
     s3-bucket: my-bucket

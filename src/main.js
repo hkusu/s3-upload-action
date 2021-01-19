@@ -18,7 +18,7 @@ if (NODE_ENV != 'local') {
     destinationPath: core.getInput('destination-path', { required: true }),
     downloadBaseUrl: core.getInput('download-base-url'),
     downloadQrPath: core.getInput('download-qr-path'),
-    downloadQrWidth: core.getInput('download-qr-width'),
+    downloadQrWidth: core.getInput('download-qr-width', { required: true }),
   };
 } else {
   input = {

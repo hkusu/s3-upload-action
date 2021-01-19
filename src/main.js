@@ -75,8 +75,7 @@ async function run(input) {
   if (input.downloadBaseUrl) {
     core.setOutput('download-url', input.downloadBaseUrl + input.destinationPath);
     if (input.downloadQrPath) {
-      const url = input.downloadBaseUrl + input.downloadQrPath;
-      await qr.toFile('./s3-upload-action-tmp.png', url, { width: downloadQrWidth })
+      await qr.toFile('./s3-upload-action-tmp.png', input.downloadBaseUrl + input.destinationPath, { width: downloadQrWidth })
       const params = {
         Bucket: input.s3Bucket,
         Key: input.downloadQrPath,
@@ -84,7 +83,7 @@ async function run(input) {
       };
       await s3.putObject(params).promise();
       fs.unlinkSync('./s3-upload-action-tmp.png');
-      core.setOutput('download-qr-url', url);
+      core.setOutput('download-qr-url', input.downloadBaseUrl + input.downloadQrPath);
     }
   }
 }

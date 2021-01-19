@@ -19,7 +19,7 @@ inputs:
     required: false
   download-qr-width:
     description: ''
-    default: 100
+    default: 120
     required: true
 outputs:
   download-url:

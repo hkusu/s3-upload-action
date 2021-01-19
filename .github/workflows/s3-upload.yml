@@ -27,7 +27,7 @@ jobs:
           source-path: ./README.md
           destination-path: ci-check/README.md
           download-base-url: 'http://${{ secrets.S3_BUCKET}}.s3-website-ap-northeast-1.amazonaws.com'
-          download-qr-image-path: ci-check/qr.png
+          download-qr-path: ci-check/qr.png
       - name: Show result
         if: always()
         run: |

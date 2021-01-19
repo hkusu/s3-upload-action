@@ -17,7 +17,8 @@ if (NODE_ENV != 'local') {
     sourcePath: core.getInput('source-path', { required: true }),
     destinationPath: core.getInput('destination-path', { required: true }),
     downloadBaseUrl: core.getInput('download-base-url'),
-    downloadQrImagePath: core.getInput('download-qr-image-path'),
+    downloadQrPath: core.getInput('download-qr-path'),
+    downloadQrWidth: core.getInput('download-qr-width', { required: true }),
   };
 } else {
   input = {
@@ -25,7 +26,8 @@ if (NODE_ENV != 'local') {
     sourcePath: './sample.txt',
     destinationPath: 'abcdef/sample.txt',
     downloadBaseUrl: 'http://my-bucket.s3-website-ap-northeast-1.amazonaws.com',
-    downloadQrImagePath: 'abcdef/qr.png',
+    downloadQrPath: 'abcdef/qr.png',
+    downloadQrWidth: '100',
   };
 }
 
@@ -36,7 +38,7 @@ async function run(input) {
   }
 
   if (input.destinationPath.endsWith('/')) {
-    throw new Error('"destinationPath" should specify a file.');
+    throw new Error('"destinationPath" should be a file.');
   }
 
   if (input.downloadBaseUrl) {
@@ -48,13 +50,19 @@ async function run(input) {
     }
   }
 
-  if (input.downloadQrImagePath) {
-    if (path.isAbsolute(input.downloadQrImagePath)) {
-      throw new Error('"downloadQrImagePath" should be a relative path.');
+  if (input.downloadQrPath) {
+    if (path.isAbsolute(input.downloadQrPath)) {
+      throw new Error('"downloadQrPath" should be a relative path.');
     }
-    if (!input.downloadQrImagePath.endsWith('.png')) {
-      throw new Error('"downloadQrImagePath" should specify a PNG file.');
+    if (!input.downloadQrPath.endsWith('.png')) {
+      throw new Error('"downloadQrPath" should be a png file.');
     }
+  }
+
+  const downloadQrWidth = parseInt(input.downloadQrWidth);
+
+  if (!downloadQrWidth | downloadQrWidth < 100 | 1000 < downloadQrWidth) {
+    throw new Error('"downloadQrWidth" should be a number between 100 and 1000.');
   }
 
   const params = {
@@ -66,12 +74,12 @@ async function run(input) {
 
   if (input.downloadBaseUrl) {
     core.setOutput('download-url', input.downloadBaseUrl + input.destinationPath);
-    if (input.downloadQrImagePath) {
-      const url = input.downloadBaseUrl + input.downloadQrImagePath;
-      await qr.toFile('./s3-upload-action-tmp.png', url)
+    if (input.downloadQrPath) {
+      const url = input.downloadBaseUrl + input.downloadQrPath;
+      await qr.toFile('./s3-upload-action-tmp.png', url, { width: downloadQrWidth })
       const params = {
         Bucket: input.s3Bucket,
-        Key: input.downloadQrImagePath,
+        Key: input.downloadQrPath,
         Body: fs.readFileSync('./s3-upload-action-tmp.png'),
       };
       await s3.putObject(params).promise();

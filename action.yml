@@ -14,9 +14,13 @@ inputs:
   download-base-url:
     description: ''
     required: false
-  download-qr-image-path:
+  download-qr-path:
     description: ''
     required: false
+  download-qr-width:
+    description: ''
+    default: 100
+    required: true
 outputs:
   download-url:
     description: ''

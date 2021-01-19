@@ -27,7 +27,7 @@ if (NODE_ENV != 'local') {
     destinationPath: 'abcdef/sample.txt',
     downloadBaseUrl: 'http://my-bucket.s3-website-ap-northeast-1.amazonaws.com',
     downloadQrPath: 'abcdef/qr.png',
-    downloadQrWidth: '100',
+    downloadQrWidth: '120',
   };
 }
 

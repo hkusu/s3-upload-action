@@ -1,36 +1,34 @@
 name: S3 Upload
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
-  post:
+  upload:
     name: Use this action for check
     runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
       - name: Use this action
         uses: ./
         id: upload
         with:
-          s3-bucket: ${{ secrets.S3_BUCKET}}
-          source-path: ./README.md
-          destination-path: ci-check/README.md
-          download-base-url: 'http://${{ secrets.S3_BUCKET}}.s3-website-ap-northeast-1.amazonaws.com'
-          download-qr-path: ci-check/qr.png
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+          aws-bucket: ${{ secrets.AWS_BUCKET}}
+          file-path: ./README.md
+          # content-type:
+          # destination-dir:
+          # private:
+          output-url: true
+          # expire:
+          create-qr: true
+          # qr-width:
+          # bucket-root:
       - name: Show result
         if: always()
         run: |
-          echo '${{ steps.upload.outputs.download-url }}'
-          echo '${{ steps.upload.outputs.download-qr-url }}'
           echo '${{ steps.upload.outputs.result }}'
+          echo '${{ steps.upload.outputs.file-url }}'
+          echo '${{ steps.upload.outputs.qr-url }}'

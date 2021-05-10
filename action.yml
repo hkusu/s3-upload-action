@@ -1,33 +1,59 @@
 name: 'S3 Upload Action'
-description: 'This is a GitHub Action to upload files to Amazon S3.'
+description: 'This is a GitHub Action that uploads a file to Amazon S3.'
 author: 'Hiroyuki Kusu'
 inputs:
-  s3-bucket:
+  aws-access-key-id:
     description: ''
     required: true
-  source-path:
+  aws-secret-access-key:
     description: ''
     required: true
-  destination-path:
+  aws-region:
     description: ''
     required: true
-  download-base-url:
+  aws-bucket:
+    description: ''
+    required: true
+  file-path:
+    description: ''
+    required: true
+  content-type:
     description: ''
     required: false
-  download-qr-path:
+  destination-dir:
     description: ''
     required: false
-  download-qr-width:
+  private:
     description: ''
-    default: 120
-    required: true
+    default: 'true'
+    required: false
+  output-url:
+    description: ''
+    default: 'false'
+    required: false
+  expire:
+    description: ''
+    default: '86400'
+    required: false
+  create-qr:
+    description: ''
+    default: 'false'
+    required: false
+  qr-width:
+    description: ''
+    default: '120'
+    required: false
+  bucket-root:
+    description: ''
+    default: 'artifacts'
+    required: false
 outputs:
-  download-url:
-    description: ''
-  download-qr-url:
-    description: ''
   result:
     description: '`success` or `failure` is set.'
+  file-url:
+    description: ''
+  qr-url:
+    description: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'

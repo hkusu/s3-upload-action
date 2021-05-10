@@ -38,9 +38,9 @@ if (NODE_ENV != 'local') {
     contentType: '',
     destinationDir: '',
     private: 'true',
-    outputUrl: 'false',
+    outputUrl: 'true',
     expire: '180',
-    createQr: 'false',
+    createQr: 'true',
     qrWidth: '120',
     bucketRoot: 'artifacts',
   };
@@ -152,7 +152,7 @@ async function run(input) {
     } else {
       qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
     }
-    core.setOutput('qr-url', fileUrl);
+    core.setOutput('qr-url', qrUrl);
   }
 }
 

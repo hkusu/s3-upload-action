@@ -91,7 +91,7 @@ async function run(input) {
   const fileKey = bucketRoot + destinationDir + path.basename(input.filePath);
 
   let acl;
-  if (input.private == 'true') {
+  if (input.private != 'false') {
     acl = 'private';
   } else {
     acl = 'public-read';

@@ -42,7 +42,7 @@ if (NODE_ENV != 'local') {
     expire: '180',
     createQr: 'true',
     qrWidth: '120',
-    bucketRoot: 'artifacts',
+    bucketRoot: '',
   };
 }
 
@@ -71,7 +71,7 @@ async function run(input) {
     if (bucketRoot.startsWith('/')) {
       bucketRoot = bucketRoot.slice(1);
     }
-    if (!bucketRoot.endsWith('/')) {
+    if (bucketRoot && !bucketRoot.endsWith('/')) {
       bucketRoot = bucketRoot + '/'
     }
   }

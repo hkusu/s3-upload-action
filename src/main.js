@@ -36,7 +36,7 @@ if (NODE_ENV != 'local') {
     awsBucket: AWS_BUCKET,
     filePath: './README.md',
     contentType: '',
-    destinationDir: '',
+    destinationDir: '/',
     private: 'true',
     outputUrl: 'true',
     expire: '180',
@@ -81,7 +81,7 @@ async function run(input) {
     if (destinationDir.startsWith('/')) {
       destinationDir = destinationDir.slice(1);
     }
-    if (!destinationDir.endsWith('/')) {
+    if (destinationDir && !destinationDir.endsWith('/')) {
       destinationDir = destinationDir + '/'
     }
   } else {

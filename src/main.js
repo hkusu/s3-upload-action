@@ -36,13 +36,13 @@ if (NODE_ENV != 'local') {
     awsBucket: AWS_BUCKET,
     filePath: './README.md',
     contentType: '',
-    destinationDir: '/',
+    destinationDir: '',
     private: 'true',
     outputUrl: 'true',
     expire: '180',
     createQr: 'true',
     qrWidth: '120',
-    bucketRoot: '',
+    bucketRoot: 'artifacts',
   };
 }
 
@@ -108,7 +108,7 @@ async function run(input) {
 
   let fileUrl;
   if (input.outputUrl == 'true' || input.createQr == 'true') {
-    if (input.private == 'true') {
+    if (input.private != 'false') {
       params = {
         Bucket: input.awsBucket,
         Key: fileKey,
@@ -142,7 +142,7 @@ async function run(input) {
 
   if (input.outputUrl == 'true') {
     let qrUrl;
-    if (input.private == 'true') {
+    if (input.private != 'false') {
       params = {
         Bucket: input.awsBucket,
         Key: qrKey,

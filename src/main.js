@@ -71,7 +71,7 @@ async function run(input) {
     if (bucketRoot.startsWith('/')) {
       bucketRoot = bucketRoot.slice(1);
     }
-    if (!bucketRoot.endsWith('/')) {
+    if (bucketRoot && !bucketRoot.endsWith('/')) {
       bucketRoot = bucketRoot + '/'
     }
   }
@@ -81,7 +81,7 @@ async function run(input) {
     if (destinationDir.startsWith('/')) {
       destinationDir = destinationDir.slice(1);
     }
-    if (!destinationDir.endsWith('/')) {
+    if (destinationDir && !destinationDir.endsWith('/')) {
       destinationDir = destinationDir + '/'
     }
   } else {
@@ -108,7 +108,7 @@ async function run(input) {
 
   let fileUrl;
   if (input.outputUrl == 'true' || input.createQr == 'true') {
-    if (input.private == 'true') {
+    if (input.private != 'false') {
       params = {
         Bucket: input.awsBucket,
         Key: fileKey,
@@ -142,7 +142,7 @@ async function run(input) {
 
   if (input.outputUrl == 'true') {
     let qrUrl;
-    if (input.private == 'true') {
+    if (input.private != 'false') {
       params = {
         Bucket: input.awsBucket,
         Key: qrKey,

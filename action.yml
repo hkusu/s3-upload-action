@@ -20,25 +20,21 @@ inputs:
   file-path:
     description: ''
     required: true
-  content-type:
-    description: ''
-    required: false
   destination-dir:
     description: ''
     required: false
-  public:
+  bucket-root:
+    description: ''
+    default: ''
+    required: false
+  output-file-url:
     description: ''
     default: 'false'
     required: false
-  output-url:
+  content-type:
     description: ''
-    default: 'false'
     required: false
-  expire:
-    description: ''
-    default: '86400'
-    required: false
-  create-qr:
+  output-qr-url:
     description: ''
     default: 'false'
     required: false
@@ -46,9 +42,13 @@ inputs:
     description: ''
     default: '120'
     required: false
-  bucket-root:
+  public:
     description: ''
-    default: 'artifacts'
+    default: 'false'
+    required: false
+  expire:
+    description: ''
+    default: '86400'
     required: false
 outputs:
   result:

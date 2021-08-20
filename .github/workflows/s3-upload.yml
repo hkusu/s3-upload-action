@@ -22,7 +22,7 @@ jobs:
           # bucket-root:
           output-file-url: true
           # content-type:
-          output-file-qr: true
+          output-qr-url: true
           # qr-width:
           # public:
           # expire:

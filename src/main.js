@@ -19,14 +19,14 @@ if (NODE_ENV != 'local') {
     awsRegion: core.getInput('aws-region', { required: true }),
     awsBucket: core.getInput('aws-bucket', { required: true }),
     filePath: core.getInput('file-path', { required: true }),
-    contentType: core.getInput('content-type'),
     destinationDir: core.getInput('destination-dir'),
-    private: core.getInput('private'),
-    outputUrl: core.getInput('output-url'),
-    expire: core.getInput('expire'),
-    createQr: core.getInput('create-qr'),
-    qrWidth: core.getInput('qr-width'),
     bucketRoot: core.getInput('bucket-root'),
+    outputFileUrl: core.getInput('output-file-url'),
+    contentType: core.getInput('content-type'),
+    outputQrUrl: core.getInput('output-qr-url'),
+    qrWidth: core.getInput('qr-width'),
+    public: core.getInput('public'),
+    expire: core.getInput('expire'),
   };
 } else {
   input = {
@@ -35,14 +35,14 @@ if (NODE_ENV != 'local') {
     awsRegion: 'ap-northeast-1',
     awsBucket: AWS_BUCKET,
     filePath: './README.md',
-    contentType: '',
     destinationDir: '',
-    private: 'true',
-    outputUrl: 'true',
-    expire: '180',
-    createQr: 'true',
+    bucketRoot: '/',
+    outputFileUrl: 'true',
+    contentType: '',
+    outputQrUrl: 'true',
     qrWidth: '120',
-    bucketRoot: 'artifacts',
+    public: 'false',
+    expire: '180',
   };
 }
 
@@ -74,6 +74,8 @@ async function run(input) {
     if (bucketRoot && !bucketRoot.endsWith('/')) {
       bucketRoot = bucketRoot + '/'
     }
+  } else {
+    bucketRoot = 'artifacts/'; // Do not use the default value of input to match the behavior with destinationDir
   }
 
   let destinationDir = input.destinationDir;
@@ -91,10 +93,10 @@ async function run(input) {
   const fileKey = bucketRoot + destinationDir + path.basename(input.filePath);
 
   let acl;
-  if (input.private != 'false') {
-    acl = 'private';
-  } else {
+  if (input.public == 'true') {
     acl = 'public-read';
+  } else {
+    acl = 'private';
   }
 
   let params = {
@@ -107,23 +109,23 @@ async function run(input) {
   await s3.putObject(params).promise();
 
   let fileUrl;
-  if (input.outputUrl == 'true' || input.createQr == 'true') {
-    if (input.private != 'false') {
+  if (input.outputFileUrl == 'true' || input.outputQrUrl == 'true') {
+    if (input.public == 'true') {
+      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
+    } else {
       params = {
         Bucket: input.awsBucket,
         Key: fileKey,
         Expires: expire,
       };
       fileUrl = await s3.getSignedUrlPromise('getObject', params);
-    } else {
-      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
     }
-    if (input.outputUrl == 'true') {
+    if (input.outputFileUrl == 'true') {
       core.setOutput('file-url', fileUrl);
     }
   }
 
-  if (input.createQr != 'true') return;
+  if (input.outputQrUrl != 'true') return;
 
   const qrKey = bucketRoot + destinationDir + 'qr.png';
   const tmpQrFile = './s3-upload-action-qr.png';
@@ -140,20 +142,18 @@ async function run(input) {
   await s3.putObject(params).promise();
   fs.unlinkSync(tmpQrFile);
 
-  if (input.outputUrl == 'true') {
-    let qrUrl;
-    if (input.private != 'false') {
-      params = {
-        Bucket: input.awsBucket,
-        Key: qrKey,
-        Expires: expire,
-      };
-      qrUrl = await s3.getSignedUrlPromise('getObject', params);
-    } else {
-      qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
-    }
-    core.setOutput('qr-url', qrUrl);
+  let qrUrl;
+  if (input.public == 'true') {
+    qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
+  } else {
+    params = {
+      Bucket: input.awsBucket,
+      Key: qrKey,
+      Expires: expire,
+    };
+    qrUrl = await s3.getSignedUrlPromise('getObject', params);
   }
+  core.setOutput('qr-url', qrUrl);
 }
 
 run(input)

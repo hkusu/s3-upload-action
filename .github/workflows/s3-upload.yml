@@ -18,14 +18,14 @@ jobs:
           aws-region: ap-northeast-1
           aws-bucket: ${{ secrets.AWS_BUCKET}}
           file-path: ./README.md
-          # content-type:
           # destination-dir:
-          # private:
-          output-url: true
-          # expire:
-          create-qr: true
-          # qr-width:
           # bucket-root:
+          output-file-url: true
+          # content-type:
+          output-qr-url: true
+          # qr-width:
+          # public:
+          # expire:
       - name: Show result
         if: always()
         run: |

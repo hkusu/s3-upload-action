@@ -21,7 +21,7 @@ if (NODE_ENV != 'local') {
     filePath: core.getInput('file-path', { required: true }),
     contentType: core.getInput('content-type'),
     destinationDir: core.getInput('destination-dir'),
-    private: core.getInput('private'),
+    public: core.getInput('public'),
     outputUrl: core.getInput('output-url'),
     expire: core.getInput('expire'),
     createQr: core.getInput('create-qr'),
@@ -37,7 +37,7 @@ if (NODE_ENV != 'local') {
     filePath: './README.md',
     contentType: '',
     destinationDir: '',
-    private: 'true',
+    public: 'false',
     outputUrl: 'true',
     expire: '180',
     createQr: 'true',
@@ -91,10 +91,10 @@ async function run(input) {
   const fileKey = bucketRoot + destinationDir + path.basename(input.filePath);
 
   let acl;
-  if (input.private != 'false') {
-    acl = 'private';
-  } else {
+  if (input.public == 'true') {
     acl = 'public-read';
+  } else {
+    acl = 'private';
   }
 
   let params = {
@@ -108,15 +108,15 @@ async function run(input) {
 
   let fileUrl;
   if (input.outputUrl == 'true' || input.createQr == 'true') {
-    if (input.private != 'false') {
+    if (input.public == 'true') {
+      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
+    } else {
       params = {
         Bucket: input.awsBucket,
         Key: fileKey,
         Expires: expire,
       };
       fileUrl = await s3.getSignedUrlPromise('getObject', params);
-    } else {
-      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
     }
     if (input.outputUrl == 'true') {
       core.setOutput('file-url', fileUrl);
@@ -142,15 +142,15 @@ async function run(input) {
 
   if (input.outputUrl == 'true') {
     let qrUrl;
-    if (input.private != 'false') {
+    if (input.public == 'true') {
+      qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
+    } else {
       params = {
         Bucket: input.awsBucket,
         Key: qrKey,
         Expires: expire,
       };
       qrUrl = await s3.getSignedUrlPromise('getObject', params);
-    } else {
-      qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
     }
     core.setOutput('qr-url', qrUrl);
   }

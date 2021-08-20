@@ -26,9 +26,9 @@ inputs:
   destination-dir:
     description: ''
     required: false
-  private:
+  public:
     description: ''
-    default: 'true'
+    default: 'false'
     required: false
   output-url:
     description: ''

@@ -15,7 +15,7 @@ Currently, only single file upload is supported.
 | `file-path` | (Required) Path of the file to upload, eg `./myfile.txt` | |
 | `destination-dir` | Directory on the bucket to upload files. If not set, 32 random alphanumeric characters will be applied. If you don't want to apply anything, specify `/`. | 32 random characters |
 | `output-url` | Add the URL of the file to the output of this action. | `false` |
-| `private` | If `true` is specified, [ACL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl) is set to 'private' and presigned URL is used. Basically should be `true` for private buckets. | `true` |
+| `public` | If `false` is specified, [ACL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl) is set to 'private' and presigned URL is used. Basically should be `false` for private buckets. | `false` |
 | `expire` | Expiration seconds for presigned URL. Specify `0` to `86400`(1 week). | `86400` |
 | `content-type` | Specify the contents of the 'Content-type' header when downloading the file, eg `image/png`. | |
 | `create-qr` | Create a QR code image for the URL of the file. Useful for mobile devices. The URL of the QR code image will be added to the output of this action. | `false` |

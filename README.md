@@ -92,6 +92,13 @@ QR code image sample:
 
 ![image](doc/qr.png)
 
+## Publish file to public
+
+If `false` is specified for the `public` input, ACL is set to 'private' and presigned URL is used.
+However, the expiration date of the presigned URL is up to one week (It can also be shortened by specifying the `expire` input).
+
+If you don't want to set the expiration date, you can get the normal URL without authentication by specifying `true` for the `public` input (Bucket side settings are also required to make it public).
+
 ## License
 
 [MIT](LICENSE)

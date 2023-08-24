@@ -3,6 +3,7 @@ const aws = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
 const qr = require('qrcode');
+const crc32 = require('buffer-crc32');
 
 const NODE_ENV = process.env['NODE_ENV'];
 
@@ -99,12 +100,17 @@ async function run(input) {
     acl = 'private';
   }
 
+  const file = fs.readFileSync(input.filePath);
+  const checksum = crc32(file).toString('base64');
+
   let params = {
     Bucket: input.awsBucket,
     Key: fileKey,
     ContentType: input.contentType,
-    Body: fs.readFileSync(input.filePath),
+    Body: file,
     ACL: acl,
+    ChecksumCRC32: checksum,
+    ChecksumAlgorithm: 'CRC32',
   };
   await s3.putObject(params).promise();
 

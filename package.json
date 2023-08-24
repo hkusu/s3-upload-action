@@ -20,6 +20,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "aws-sdk": "^2.820.0",
+    "buffer-crc32": "^0.2.13",
     "qrcode": "^1.4.4"
   },
   "devDependencies": {

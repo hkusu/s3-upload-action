@@ -68,6 +68,10 @@ Use `file-url` output.
 When uploading an image and displaying it on a browser, specify `image/png` etc. for `content-type` input.
 For Android apk file, you can install it on your device by specifying `application/vnd.android.package-archive`.
 
+> [!NOTE]  
+> If `public` input is set to `true` and presigned URL is applied, the AWS access key ID will be included in the URL.
+> Therefore, if you manage that ID with [secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions), be aware that when you display or output something on GitHub, part of the URL will be masked as `***`.
+
 ### URL of the generated QR code image
 
 Use `qr-url` output.

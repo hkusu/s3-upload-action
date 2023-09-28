@@ -20,7 +20,7 @@ Currently, only single file upload is supported.
 | `output-qr-url` | Generate a QR code image for the URL of the file and add the URL of the image to the output of this action. Useful for mobile devices. | `false` |
 | `qr-width` | QR code image width pixels. Specify `100` to `1000`. | `120` |
 | `public` | If `false` is specified, [ACL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl) is set to 'private' and presigned URL is used. Basically should be `false` for private buckets. | `false` |
-| `expire` | Expiration seconds for presigned URL. Specify `0` to `86400`(1 week). | `86400` |
+| `expire` | Expiration seconds for presigned URL. Specify `0` to `604800`(1 week). | `604800` |
 
 ## Outputs
 

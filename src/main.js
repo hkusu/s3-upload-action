@@ -27,7 +27,8 @@ if (NODE_ENV != 'local') {
     qrWidth: core.getInput('qr-width'),
     public: core.getInput('public'),
     expire: core.getInput('expire'),
-    alternativeDomain: core.getInput('alternative-domain'),
+    alternativeDomainPublic: core.getInput('alternative-domain-public'),
+    alternativeDomainPrivate: core.getInput('alternative-domain-private'),
   };
 } else {
   input = {
@@ -37,14 +38,15 @@ if (NODE_ENV != 'local') {
     awsBucket: AWS_BUCKET,
     filePath: './README.md',
     destinationDir: '',
-    bucketRoot: '/',
+    bucketRoot: '',
     outputFileUrl: 'true',
     contentType: '',
     outputQrUrl: 'true',
     qrWidth: '120',
     public: 'false',
     expire: '180',
-    alternativeDomain: 'example.com',
+    alternativeDomainPublic: '',
+    alternativeDomainPrivate: '',
   };
 }
 
@@ -113,10 +115,9 @@ async function run(input) {
   let fileUrl;
   if (input.outputFileUrl == 'true' || input.outputQrUrl == 'true') {
     if (input.public == 'true') {
-      if (input.alternativeDomain) {
-        fileUrl = `https://${input.alternativeDomain}/${fileKey}`;
-      } else {
-        fileUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${fileKey}`;
+      fileUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${fileKey}`;
+      if (input.alternativeDomainPublic) {
+        fileUrl = fileUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPublic}/`);
       }
     } else {
       params = {
@@ -125,8 +126,8 @@ async function run(input) {
         Expires: expire,
       };
       fileUrl = await s3.getSignedUrlPromise('getObject', params);
-      if (input.alternativeDomain) {
-        fileUrl = fileUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com`, input.alternativeDomain);
+      if (input.alternativeDomainPrivate) {
+        fileUrl = fileUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPrivate}/`);
       }
     }
     if (input.outputFileUrl == 'true') {
@@ -151,11 +152,9 @@ async function run(input) {
   await s3.putObject(params).promise();
   fs.unlinkSync(tmpQrFile);
 
-  let qrUrl;
-  if (input.alternativeDomain) {
-    qrUrl = `https://${input.alternativeDomain}/${qrKey}`;
-  } else {
-    qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
+  let qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
+  if (input.alternativeDomainPublic) {
+    qrUrl = qrUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPublic}/`);
   }
   core.setOutput('qr-url', qrUrl);
 }

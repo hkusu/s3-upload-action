@@ -50,7 +50,10 @@ inputs:
     description: ''
     default: '604800'
     required: false
-  alternative-domain:
+  alternative-domain-public:
+    description: ''
+    required: false
+  alternative-domain-private:
     description: ''
     required: false
 outputs:

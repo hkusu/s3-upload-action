@@ -50,6 +50,9 @@ inputs:
     description: ''
     default: '604800'
     required: false
+  alternative-domain:
+    description: ''
+    required: false
 outputs:
   result:
     description: '`success` or `failure` is set.'

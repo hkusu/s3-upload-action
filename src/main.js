@@ -137,22 +137,12 @@ async function run(input) {
     Key: qrKey,
     ContentType: 'image/png', // Required to display as an image in the browser
     Body: fs.readFileSync(tmpQrFile),
-    ACL: acl,
+    ACL: 'public-read', // always public
   };
   await s3.putObject(params).promise();
   fs.unlinkSync(tmpQrFile);
 
-  let qrUrl;
-  if (input.public == 'true') {
-    qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
-  } else {
-    params = {
-      Bucket: input.awsBucket,
-      Key: qrKey,
-      Expires: expire,
-    };
-    qrUrl = await s3.getSignedUrlPromise('getObject', params);
-  }
+  const qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
   core.setOutput('qr-url', qrUrl);
 }
 

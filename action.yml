@@ -48,7 +48,13 @@ inputs:
     required: false
   expire:
     description: ''
-    default: '86400'
+    default: '604800'
+    required: false
+  alternative-domain-public:
+    description: ''
+    required: false
+  alternative-domain-private:
+    description: ''
     required: false
 outputs:
   result:

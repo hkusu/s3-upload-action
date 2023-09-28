@@ -27,6 +27,8 @@ if (NODE_ENV != 'local') {
     qrWidth: core.getInput('qr-width'),
     public: core.getInput('public'),
     expire: core.getInput('expire'),
+    alternativeDomainPublic: core.getInput('alternative-domain-public'),
+    alternativeDomainPrivate: core.getInput('alternative-domain-private'),
   };
 } else {
   input = {
@@ -36,13 +38,15 @@ if (NODE_ENV != 'local') {
     awsBucket: AWS_BUCKET,
     filePath: './README.md',
     destinationDir: '',
-    bucketRoot: '/',
+    bucketRoot: '',
     outputFileUrl: 'true',
     contentType: '',
     outputQrUrl: 'true',
     qrWidth: '120',
     public: 'false',
     expire: '180',
+    alternativeDomainPublic: '',
+    alternativeDomainPrivate: '',
   };
 }
 
@@ -57,7 +61,7 @@ const s3 = new aws.S3({signatureVersion: 'v4'});
 async function run(input) {
 
   const expire = parseInt(input.expire);
-  if (!expire | expire < 0 | 604800 < expire) {
+  if (isNaN(expire) | expire < 0 | 604800 < expire) {
     throw new Error('"expire" input should be a number between 0 and 604800.');
   }
 
@@ -111,7 +115,10 @@ async function run(input) {
   let fileUrl;
   if (input.outputFileUrl == 'true' || input.outputQrUrl == 'true') {
     if (input.public == 'true') {
-      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
+      fileUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${fileKey}`;
+      if (input.alternativeDomainPublic) {
+        fileUrl = fileUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPublic}/`);
+      }
     } else {
       params = {
         Bucket: input.awsBucket,
@@ -119,6 +126,9 @@ async function run(input) {
         Expires: expire,
       };
       fileUrl = await s3.getSignedUrlPromise('getObject', params);
+      if (input.alternativeDomainPrivate) {
+        fileUrl = fileUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPrivate}/`);
+      }
     }
     if (input.outputFileUrl == 'true') {
       core.setOutput('file-url', fileUrl);
@@ -137,21 +147,14 @@ async function run(input) {
     Key: qrKey,
     ContentType: 'image/png', // Required to display as an image in the browser
     Body: fs.readFileSync(tmpQrFile),
-    ACL: acl,
+    ACL: 'public-read', // always public
   };
   await s3.putObject(params).promise();
   fs.unlinkSync(tmpQrFile);
 
-  let qrUrl;
-  if (input.public == 'true') {
-    qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
-  } else {
-    params = {
-      Bucket: input.awsBucket,
-      Key: qrKey,
-      Expires: expire,
-    };
-    qrUrl = await s3.getSignedUrlPromise('getObject', params);
+  let qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
+  if (input.alternativeDomainPublic) {
+    qrUrl = qrUrl.replace(`${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${bucketRoot}`, `${input.alternativeDomainPublic}/`);
   }
   core.setOutput('qr-url', qrUrl);
 }

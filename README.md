@@ -20,7 +20,7 @@ Currently, only single file upload is supported.
 | `output-qr-url` | Generate a QR code image for the URL of the file and add the URL of the image to the output of this action. Useful for mobile devices. | `false` |
 | `qr-width` | QR code image width pixels. Specify `100` to `1000`. | `120` |
 | `public` | If `false` is specified, [ACL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl) is set to 'private' and presigned URL is used. Basically should be `false` for private buckets. | `false` |
-| `expire` | Expiration seconds for presigned URL. Specify `0` to `86400`(1 week). | `86400` |
+| `expire` | Expiration seconds for presigned URL. Specify `0` to `604800`(1 week). | `604800` |
 
 ## Outputs
 
@@ -67,6 +67,10 @@ Use `file-url` output.
 
 When uploading an image and displaying it on a browser, specify `image/png` etc. for `content-type` input.
 For Android apk file, you can install it on your device by specifying `application/vnd.android.package-archive`.
+
+> [!NOTE]  
+> If `public` input is set to `true` and presigned URL is applied, the AWS access key ID will be included in the URL.
+> Therefore, if you manage that ID with [secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions), be aware that when you display or output something on GitHub, part of the URL will be masked as `***`.
 
 ### URL of the generated QR code image
 

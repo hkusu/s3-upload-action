@@ -111,7 +111,7 @@ async function run(input) {
   let fileUrl;
   if (input.outputFileUrl == 'true' || input.outputQrUrl == 'true') {
     if (input.public == 'true') {
-      fileUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${fileKey}`;
+      fileUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${fileKey}`;
     } else {
       params = {
         Bucket: input.awsBucket,
@@ -144,7 +144,7 @@ async function run(input) {
 
   let qrUrl;
   if (input.public == 'true') {
-    qrUrl = `https://${input.awsBucket}.s3-${input.awsRegion}.amazonaws.com/${qrKey}`;
+    qrUrl = `https://${input.awsBucket}.s3.${input.awsRegion}.amazonaws.com/${qrKey}`;
   } else {
     params = {
       Bucket: input.awsBucket,
